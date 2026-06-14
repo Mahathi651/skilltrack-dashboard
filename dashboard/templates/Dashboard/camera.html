@@ -1,0 +1,40 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+
+<h1>🧠 Vision Lab</h1>
+
+<div class="card">
+    <h2>Real-Time Camera Filters</h2>
+    <p>
+        Live OpenCV-powered webcam stream with tactical filter controls.
+        Choose a filter below to instantly transform the camera feed.
+    </p>
+
+    <br>
+
+    <img src="{% url 'video_feed' %}" class="vision-frame">
+
+    <div class="filter-panel">
+        <button class="filter-key active" onclick="changeFilter(this,'normal')">Normal</button>
+        <button class="filter-key" onclick="changeFilter(this,'gray')">Grayscale</button>
+        <button class="filter-key" onclick="changeFilter(this,'sepia')">Sepia</button>
+        <button class="filter-key" onclick="changeFilter(this,'blur')">Blur</button>
+    </div>
+</div>
+
+<script>
+function changeFilter(button, filterName){
+    document.querySelectorAll('.filter-key').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    button.classList.add('active');
+
+    fetch("/change-filter/" + filterName + "/")
+        .then(response => response.json())
+        .then(data => console.log("Filter changed:", data.filter));
+}
+</script>
+
+{% endblock %}

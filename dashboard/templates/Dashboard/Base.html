@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillTrack Dashboard</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Segoe UI', Arial, sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            background:
+                radial-gradient(circle at top left, rgba(255,0,0,0.22), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(120,0,0,0.25), transparent 35%),
+                linear-gradient(135deg,#020202,#100000,#210000,#050505);
+            color:#ffffff;
+            overflow-x:hidden;
+        }
+
+        .sidebar{
+            position:fixed;
+            top:20px;
+            left:20px;
+            width:280px;
+            height:calc(100vh - 40px);
+            padding:26px;
+            border-radius:28px;
+            background:rgba(10,10,10,0.88);
+            border:1px solid rgba(255,50,50,0.35);
+            box-shadow:0 0 28px rgba(255,0,0,0.22);
+            backdrop-filter:blur(18px);
+            animation:slideInLeft .8s ease;
+        }
+
+        @keyframes slideInLeft{
+            from{opacity:0;transform:translateX(-70px);}
+            to{opacity:1;transform:translateX(0);}
+        }
+
+        .logo{
+            font-size:31px;
+            font-weight:900;
+            color:#ff3333;
+            text-shadow:0 0 18px rgba(255,0,0,0.9);
+            margin-bottom:34px;
+        }
+
+        .sidebar a{
+            position:relative;
+            display:block;
+            color:#eeeeee;
+            text-decoration:none;
+            padding:14px 16px 14px 22px;
+            margin-bottom:12px;
+            border-radius:16px;
+            background:rgba(255,255,255,0.035);
+            transition:.35s ease;
+        }
+
+        .sidebar a::before{
+            content:"";
+            position:absolute;
+            left:0;
+            top:50%;
+            width:4px;
+            height:0;
+            background:#ff2b2b;
+            border-radius:10px;
+            transform:translateY(-50%);
+            transition:.35s ease;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active{
+            background:linear-gradient(90deg,rgba(255,0,0,.35),rgba(70,0,0,.25));
+            transform:translateX(8px);
+            box-shadow:0 0 20px rgba(255,0,0,.35);
+        }
+
+        .sidebar a:hover::before,
+        .sidebar a.active::before{
+            height:70%;
+        }
+
+        .main{
+            margin-left:330px;
+            padding:30px;
+            animation:fadeSlide .9s ease;
+        }
+
+        @keyframes fadeSlide{
+            from{opacity:0;transform:translateY(35px);}
+            to{opacity:1;transform:translateY(0);}
+        }
+
+        .topbar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:24px 30px;
+            margin-bottom:30px;
+            border-radius:26px;
+            background:rgba(15,15,15,.82);
+            border:1px solid rgba(255,60,60,.28);
+            box-shadow:0 0 24px rgba(255,0,0,.18);
+            backdrop-filter:blur(16px);
+        }
+
+        .profile{
+            color:#ff6b6b;
+            font-weight:700;
+        }
+
+        h1{
+            color:#ff4040;
+            margin-bottom:15px;
+            text-shadow:0 0 14px rgba(255,0,0,.55);
+        }
+
+        h2,h3{
+            color:#ffffff;
+            margin-bottom:10px;
+        }
+
+        p, li{
+            color:#e0e0e0;
+            line-height:1.7;
+        }
+
+        .grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+            gap:24px;
+        }
+
+        .card{
+            background:linear-gradient(145deg,rgba(25,25,25,.88),rgba(20,0,0,.86));
+            border:1px solid rgba(255,60,60,.25);
+            border-radius:26px;
+            padding:28px;
+            margin-bottom:24px;
+            box-shadow:0 12px 32px rgba(0,0,0,.42);
+            transition:.38s ease;
+        }
+
+        .card:hover{
+            transform:translateY(-10px) scale(1.015);
+            border-color:rgba(255,60,60,.65);
+            box-shadow:0 0 28px rgba(255,0,0,.42),0 18px 45px rgba(0,0,0,.65);
+        }
+
+        .btn{
+            display:inline-block;
+            padding:13px 24px;
+            margin-top:12px;
+            margin-right:10px;
+            border:none;
+            border-radius:30px;
+            color:#fff;
+            background:linear-gradient(90deg,#ff0000,#8b0000,#ff3333);
+            text-decoration:none;
+            font-weight:800;
+            cursor:pointer;
+            box-shadow:0 0 18px rgba(255,0,0,.42);
+            transition:.3s ease;
+        }
+
+        .btn:hover,
+        .btn.active{
+            transform:translateY(-4px) scale(1.07);
+            box-shadow:0 0 24px rgba(255,0,0,.95),0 0 46px rgba(255,0,0,.55);
+        }
+
+        .progress{
+            background:#1d1d1d;
+            border-radius:25px;
+            overflow:hidden;
+            margin-top:14px;
+            border:1px solid rgba(255,255,255,.08);
+        }
+
+        .bar{
+            background:linear-gradient(90deg,#ff0000,#ff4d4d,#8b0000);
+            padding:11px;
+            color:white;
+            text-align:center;
+            font-weight:bold;
+            border-radius:25px;
+        }
+
+        .vision-frame{
+            width:100%;
+            max-width:920px;
+            border-radius:24px;
+            border:1px solid rgba(255,70,70,.85);
+            box-shadow:0 0 18px rgba(255,0,0,.45),0 0 50px rgba(255,0,0,.22);
+            animation:pulseGlow 2.6s infinite ease-in-out;
+        }
+
+        @keyframes pulseGlow{
+            0%,100%{box-shadow:0 0 18px rgba(255,0,0,.45),0 0 50px rgba(255,0,0,.22);}
+            50%{box-shadow:0 0 28px rgba(255,0,0,.75),0 0 70px rgba(255,0,0,.38);}
+        }
+
+        .filter-panel{
+            margin-top:22px;
+            display:flex;
+            flex-wrap:wrap;
+            gap:12px;
+        }
+
+        .filter-key{
+            padding:12px 22px;
+            border-radius:14px;
+            border:1px solid rgba(255,60,60,.45);
+            background:rgba(35,0,0,.8);
+            color:#f5f5f5;
+            font-weight:800;
+            cursor:pointer;
+            transition:.25s ease;
+        }
+
+        .filter-key:hover,
+        .filter-key.active{
+            background:#ff1f1f;
+            color:white;
+            transform:translateY(-3px);
+            box-shadow:0 0 18px rgba(255,0,0,.85);
+        }
+
+        footer{
+            text-align:center;
+            margin-top:40px;
+            color:#9f9f9f;
+        }
+
+        @media(max-width:900px){
+            .sidebar{
+                position:relative;
+                width:auto;
+                height:auto;
+                margin:20px;
+            }
+
+            .main{
+                margin-left:0;
+            }
+
+            .topbar{
+                flex-direction:column;
+                gap:10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="sidebar">
+    <div class="logo">🔥 SkillTrack</div>
+
+    <a href="/">🏠 Dashboard</a>
+    <a href="/skills/">🐍 Skills</a>
+    <a href="/projects/">💻 Projects</a>
+    <a href="/internships/">🚀 Internships</a>
+    <a href="/analytics/">📊 Analytics</a>
+    
+    <a href="/settings/">⚙ Settings</a>
+    <a href="/contact/">📞 Contact</a>
+</div>
+
+<div class="main">
+    <div class="topbar">
+        <h2>SkillTrack Pro Dashboard</h2>
+        <div class="profile">Created by Mahathi 👩‍💻</div>
+    </div>
+
+    {% block content %}
+    {% endblock %}
+
+    <footer>© 2026 SkillTrack Pro • Built with Django</footer>
+</div>
+
+</body>
+</html>
